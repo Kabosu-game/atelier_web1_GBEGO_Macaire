@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des étudiants</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section>
+        <div class="card">
+            <div class="card-header">
+                <div class="title-block">
+                    <h1>Gestion des étudiants</h1>
+                </div>
+                <a href="form.html">
+                    <button type="button">
+                        <span class="icon">+</span>
+                        Ajouter un étudiant
+                    </button>
+                </a>
+            </div>
+
+            <div class="search-bar-wrapper">
+                <input type="text" id="search" class="search-input" placeholder="Rechercher par nom, prénom, email, téléphone ou filière...">
+                <span id="nombre" class="contact-count"></span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Filière</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="liste-etudiants">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        var zoneTableau = document.getElementById('liste-etudiants');
+        var champRecherche = document.getElementById('search');
+        var zoneNombre = document.getElementById('nombre');
+
+        var etudiants = [];
+
+        function afficher(liste) {
+            zoneTableau.innerHTML = '';
+            if (liste.length === 0) {
+                zoneTableau.innerHTML = '<tr><td colspan="6" class="empty-state">Aucun étudiant</td></tr>';
+                zoneNombre.textContent = '0 étudiant(s)';
+                return;
+            }
+            var i;
+            for (i = 0; i < liste.length; i++) {
+                var e = liste[i];
+                var ligne = '<tr>';
+                ligne += '<td>' + (e.nom || '') + '</td>';
+                ligne += '<td>' + (e.prenom || '') + '</td>';
+                ligne += '<td>' + (e.email || '') + '</td>';
+                ligne += '<td>' + (e.telephone || '') + '</td>';
+                ligne += '<td>' + (e.filiere || '') + '</td>';
+                ligne += '<td class="td-action"><a href="modifier_etudiant.php?id=' + e.id + '" class="btn-edit">Modifier</a> ';
+                ligne += '<a href="supprimer_etudiant.php?id=' + e.id + '" class="btn-del" onclick="return confirm(\'Supprimer cet étudiant ?\');">Supprimer</a></td>';
+                ligne += '</tr>';
+                zoneTableau.innerHTML += ligne;
+            }
+            zoneNombre.textContent = liste.length + ' étudiant(s)';
+        }
+
+        function filtrer() {
+            var texte = (champRecherche.value || '').toLowerCase();
+            var resultat = [];
+            var i, chaine;
+            for (i = 0; i < etudiants.length; i++) {
+                chaine = (etudiants[i].nom + ' ' + etudiants[i].prenom + ' ' + etudiants[i].email + ' ' + etudiants[i].telephone + ' ' + etudiants[i].filiere).toLowerCase();
+                if (chaine.indexOf(texte) !== -1) {
+                    resultat.push(etudiants[i]);
+                }
+            }
+            afficher(resultat);
+        }
+
+        function charger() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'liste_etudiants.php', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    try {
+                        etudiants = JSON.parse(xhr.responseText || '[]');
+                    } catch (e) {
+                        etudiants = [];
+                    }
+                    afficher(etudiants);
+                }
+            };
+            xhr.send();
+        }
+
+        champRecherche.addEventListener('input', filtrer);
+        charger();
+    </script>
+</body>
+</html>

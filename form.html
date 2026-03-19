@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire</title>
+    <title>Ajouter un étudiant</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
     <main class="page">
         <section class="card">
-            <h1 class="card_title">Formulaire d'ajout de contact</h1>
-            <form class="form" action="ajouter_contact.php" method="POST" novalidate>
+            <h1 class="card_title">Formulaire d'ajout d'étudiant</h1>
+            <form class="form" id="etudiant-form" action="ajouter_etudiant.php" method="POST">
                 <div class="form_group">
                     <label class="form_label" for="nom">Nom</label>
-                    <input class="form_input" type="text" id="nom" name="nom" autocomplete="name" required>
+                    <input class="form_input" type="text" id="nom" name="nom" autocomplete="family-name" required>
+                </div>
+                <div class="form_group">
+                    <label class="form_label" for="prenom">Prénom</label>
+                    <input class="form_input" type="text" id="prenom" name="prenom" autocomplete="given-name" required>
                 </div>
                 <div class="form_group">
                     <label class="form_label" for="email">Email</label>
@@ -24,7 +27,12 @@
                     <label class="form_label" for="telephone">Téléphone</label>
                     <input class="form_input" type="tel" id="telephone" name="telephone" autocomplete="tel" required>
                 </div>
+                <div class="form_group">
+                    <label class="form_label" for="filiere">Filière</label>
+                    <input class="form_input" type="text" id="filiere" name="filiere" placeholder="Ex : Informatique, Gestion…" required>
+                </div>
                 <div class="form_actions">
+                    <a href="index.html" class="btn-cancel">Annuler</a>
                     <button class="button" type="submit">Enregistrer</button>
                 </div>
             </form>
